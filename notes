@@ -1,0 +1,59 @@
+
+* Notes from Catalin
+
+- Machine is not quite the pico machine:
+  + register machine without stack
+    - Mem seems really just a large set of registers
+    - global variables
+  + This means that every operation (even an add) is in fact also
+    a store, which will make things unnecessarily complicated
+  + Q: Would it be too hard to do a stack?
+
+- SSNI is a nice start
+  + but it's already very easy to falsify by testing;
+    not clear what advantage model checking could bring
+    when testing finds all SSNI bugs in less than 16ms
+  + the long term problem with SSNI is that it requires capturing all
+    the invariants in the indistinguishability relation; and the real
+    machine has too complicated invariants
+  + the 3 conditions can / should be completely split
+    - when quickchecking we had some strange reasons (shrinking)
+      for considering them all together
+    - it would be cool if you could print which of the conditions
+      failed; otherwise it's hard to debug counterexamples
+    - printing could differ between the different SSNI parts
+  + missing the 4th condition, but that's not what we break anyway
+
+- NaVs
+  + seems like a premature extension
+    - the label needs to protect everything,
+      so morally the nav is part of the value
+  + without public labels this extension it's
+    to do NaVs soundly anyway
+    + for public labels see Leo's micro machine
+    + we wrote a whole paper about this
+
+- Tom's original question: "I'd be interested to hear what others
+  think and if it may be helpful to our verification efforts."
+  + Maybe. Can it do anything we couldn't do already?
+    e.g. can it find the Pop bug very fast using LLNI? :)
+  + Maybe producing (bounded) proofs (as opposed to just finding
+    counterexamples) would be a gain wrt testing
+
+- BTW. Does Tom have / want access to our pico paper code?
+  + or access to Leo's new micro machine would also do?
+
+* Notes to self
+
+- Labels just Booleans
+  + false = low
+  + true = high
+
+- Interpreting output:
+  + the line noise after the instruction name are
+    the affected registers
+  + first two columns are the 2 inputs
+  + last two columns are the 2 outputs
+  + we have a nice way of printing things compactly,
+    which works great for fully shrunk counterexamples
+    - not useful without shrinking though
